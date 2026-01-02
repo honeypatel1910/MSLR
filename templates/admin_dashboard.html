@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Election Commission Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+
+<h2 class="mb-4">Election Commission Dashboard</h2>
+
+<a href="/logout" class="btn btn-danger mb-4">Logout</a>
+
+<div class="card p-4 mb-5">
+  <h4>Create Referendum</h4>
+
+  <form action="/admin/create" method="POST">
+    <input class="form-control mb-2" name="title" placeholder="Title" required>
+    <textarea class="form-control mb-2" name="description" placeholder="Description" required></textarea>
+    <input class="form-control mb-2" name="option1" placeholder="Option 1" required>
+    <input class="form-control mb-2" name="option2" placeholder="Option 2" required>
+    <button class="btn btn-primary">Create Referendum</button>
+  </form>
+</div>
+
+<h4>Existing Referendums</h4>
+
+{% for ref in referendums %}
+  <div class="card p-3 mb-3">
+    <h5>{{ ref.title }}</h5>
+    <p>{{ ref.description }}</p>
+    <p><strong>Status:</strong> {{ ref.status }}</p>
+
+    {% if ref.status == 'closed' %}
+      <form action="/admin/open/{{ ref.referendum_id }}" method="POST">
+        <button class="btn btn-success btn-sm">Open</button>
+      </form>
+    {% else %}
+      <form action="/admin/close/{{ ref.referendum_id }}" method="POST">
+        <button class="btn btn-warning btn-sm">Close</button>
+      </form>
+    {% endif %}
+
+    <a href="/admin/results/{{ ref.referendum_id }}" class="btn btn-info btn-sm mt-2">
+      View Results
+    </a>
+  </div>
+{% endfor %}
+
+</body>
+</html>

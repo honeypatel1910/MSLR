@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Voter Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+
+<h2>Voter Dashboard</h2>
+
+{% for ref in referendums %}
+  <div class="card mb-4 p-3">
+    <h4>{{ ref.title }}</h4>
+    <p>{{ ref.description }}</p>
+
+    {% if ref.has_voted %}
+      <div class="alert alert-info">You have already voted.</div>
+    {% else %}
+      <form action="/vote" method="POST">
+        <input type="hidden" name="referendum_id" value="{{ ref.referendum_id }}">
+
+        {% for opt in ref.options %}
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="option_id" value="{{ opt.option_id }}" required>
+            <label class="form-check-label">{{ opt.option_text }}</label>
+          </div>
+        {% endfor %}
+
+        <button class="btn btn-primary mt-3">Cast Vote</button>
+      </form>
+    {% endif %}
+  </div>
+{% endfor %}
+
+<a href="/logout" class="btn btn-danger">Logout</a>
+
+</body>
+</html>
